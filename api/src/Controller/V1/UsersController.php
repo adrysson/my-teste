@@ -46,7 +46,7 @@ class UsersController extends AppController
                     'errors' => $user->errors(),
                     '_serialize' => 'errors'
                 ]);
-            }            
+            }
         }
     }
 }

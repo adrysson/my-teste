@@ -51,7 +51,14 @@ class UsersTable extends Table
             ->scalar('name')
             ->maxLength('name', 255)
             ->requirePresence('name', 'create')
-            ->allowEmptyString('name', false);
+            ->allowEmptyString('name', false)
+            ->add('name', 'complete', [
+                'rule' => function ($value) {
+                    // Exige que o usuário escreva seu nome completo
+                    return count(explode(' ', trim(preg_replace('/\s+/', ' ',$value)))) > 1;
+                },
+                'message' => __('Enter your full name'),
+            ]);
 
         $validator
             ->scalar('username')
