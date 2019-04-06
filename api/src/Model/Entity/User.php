@@ -2,6 +2,7 @@
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use App\Auth\Md5PasswordHasher;
 
 /**
  * User Entity
@@ -40,4 +41,9 @@ class User extends Entity
     protected $_hidden = [
         'password'
     ];
+
+    protected function __setPassword(string $password)
+    {
+        return (new Md5PasswordHasher)->hash($password);
+    }
 }
