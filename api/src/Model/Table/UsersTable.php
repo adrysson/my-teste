@@ -53,8 +53,8 @@ class UsersTable extends Table
             ->requirePresence('name', 'create')
             ->allowEmptyString('name', false)
             ->add('name', 'complete', [
+                // Exige que o usuário escreva seu nome completo
                 'rule' => function ($value) {
-                    // Exige que o usuário escreva seu nome completo
                     return count(explode(' ', trim(preg_replace('/\s+/', ' ',$value)))) > 1;
                 },
                 'message' => __('Enter your full name'),
@@ -76,11 +76,21 @@ class UsersTable extends Table
             ->minLength('password', 6)
             ->maxLength('password', 255)
             ->requirePresence('password', 'create')
-            ->allowEmptyString('password', false);
+            ->allowEmptyString('password', false)
+            ->add('password', 'valid_password', [
+                // Exige que o usuário escreva sua senha contendo pelo menos uma letra minúscula, uma letra maiúscula e números
+                'rule' => function ($value) {
+                    $count_uppercase = preg_match_all('#([A-Z])#',$value);
+                    $count_lowercase = preg_match_all('#([a-z])#',$value);
+                    $count_numbers = preg_match_all('#([0-9])#',$value);
+                    return $count_uppercase > 0 && $count_lowercase > 0 && $count_numbers > 0;
+                },
+                'message' => __('The password must contain at least one lowercase letter, one uppercase letter, and numbers'),
+            ]);
 
         $validator
             ->boolean('active')
-            ->requirePresence('active', 'create')
+            ->requirePresence('active', 'update')
             ->allowEmptyString('active', false);
 
         return $validator;
