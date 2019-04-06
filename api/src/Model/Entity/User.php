@@ -42,7 +42,7 @@ class User extends Entity
         'password'
     ];
 
-    protected function __setPassword(string $password)
+    protected function _setPassword(string $password)
     {
         return (new Md5PasswordHasher)->hash($password);
     }

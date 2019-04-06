@@ -2,6 +2,8 @@
 namespace App\Controller\V1;
 
 use App\Controller\AppController;
+use Firebase\JWT\JWT;
+use Cake\Utility\Security;
 
 /**
  * Users Controller
@@ -12,6 +14,11 @@ use App\Controller\AppController;
  */
 class UsersController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow(['add']);
+    }
     /**
      * View method
      *
@@ -25,7 +32,10 @@ class UsersController extends AppController
             'contain' => []
         ]);
 
-        $this->set('user', $user);
+        $this->set([
+            'user' => $user,
+            '_serialize' => ['user'],
+        ]);
     }
 
     /**
@@ -46,6 +56,28 @@ class UsersController extends AppController
                     'errors' => $user->errors(),
                     '_serialize' => 'errors'
                 ]);
+            }
+        }
+    }
+
+    public function login()
+    {
+        if ($this->request->is('post')) {
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->Auth->setUser($user);
+
+                $token = JWT::encode([
+                    'sub' => $user['id'],
+                    'exp' => time() + 3600 * 24 * 7,
+                ], Security::getSalt());
+
+                $this->set([
+                    'token' => $token,
+                    '_serialize' => ['token'],
+                ]);
+            } else {
+                return $this->response->withStatus(422)->withStringBody(__('Username or password is incorrect'));
             }
         }
     }
