@@ -48,17 +48,17 @@ class AppController extends Controller
         $this->loadComponent('Auth', [
             'storage' => 'Memory',
             'authenticate' => [
+                'Form' => [
+                    'passwordHasher' => [
+                        'className' => 'Md5',
+                    ],
+                ],
                 'ADmad/JwtAuth.Jwt' => [
                     'userModel' => 'Users',
                     'fields' => [
                         'username' => 'id'
                     ],
                     'parameter' => '_token',
-                ],
-                'Form' => [
-                    'passwordHasher' => [
-                        'className' => 'Md5'
-                    ],
                 ],
             ],
             'unauthorizedRedirect' => false,
