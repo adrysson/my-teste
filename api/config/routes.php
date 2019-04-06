@@ -91,6 +91,12 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
+Router::scope('/v1', ['prefix'=>'v1'], function(RouteBuilder $routes) {
+    $routes->setExtensions(['json']);
+    $routes->resources('Users');
+    $routes->fallbacks(DashedRoute::class);
+});
+
 /**
  * If you need a different set of middleware or none at all,
  * open new scope and define routes there.
