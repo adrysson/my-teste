@@ -91,9 +91,11 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->fallbacks(DashedRoute::class);
 });
 
-Router::scope('/v1', ['prefix'=>'v1'], function(RouteBuilder $routes) {
+Router::scope('/v1', ['prefix' => 'v1'], function(RouteBuilder $routes) {
     $routes->setExtensions(['json']);
+    
     $routes->resources('Users');
+
     $routes->fallbacks(DashedRoute::class);
 });
 

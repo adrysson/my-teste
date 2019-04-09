@@ -210,6 +210,20 @@ return [
             'tls' => null,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
+        'sendgrid' => [
+            'className' => 'Cake\Mailer\Transport\SmtpTransport',
+            /*
+             * The following keys are used in SMTP transports:
+             */
+            'host' => 'smtp.sendgrid.net',
+            'port' => 587,
+            'timeout' => 30,
+            'username' => 'apikey',
+            'password' => env('SENDGRID_KEY', 'secret'),
+            'client' => null,
+            'tls' => true,
+            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
+        ],
     ],
 
     /**
@@ -227,6 +241,10 @@ return [
             'from' => 'you@localhost',
             //'charset' => 'utf-8',
             //'headerCharset' => 'utf-8',
+        ],
+        'sendgrid' => [
+            'transport' => 'sendgrid',
+            'from' => 'you@localhost',
         ],
     ],
 

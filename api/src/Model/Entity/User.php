@@ -30,7 +30,8 @@ class User extends Entity
         'username' => true,
         'email' => true,
         'password' => true,
-        'active' => true
+        'active' => true,
+        'hash' => true,
     ];
 
     /**
@@ -39,7 +40,8 @@ class User extends Entity
      * @var array
      */
     protected $_hidden = [
-        'password'
+        'password',
+        'hash',
     ];
 
     protected function _setPassword(string $password)

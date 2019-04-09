@@ -93,6 +93,10 @@ class UsersTable extends Table
             ->requirePresence('active', 'update')
             ->allowEmptyString('active', false);
 
+        $validator
+            ->scalar('hash')
+            ->maxLength('hash', 255);
+
         return $validator;
     }
 
@@ -107,6 +111,7 @@ class UsersTable extends Table
     {
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));
+        $rules->add($rules->isUnique(['hash']));
 
         return $rules;
     }
