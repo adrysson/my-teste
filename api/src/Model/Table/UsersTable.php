@@ -93,10 +93,6 @@ class UsersTable extends Table
             ->requirePresence('active', 'update')
             ->allowEmptyString('active', false);
 
-        $validator
-            ->scalar('hash')
-            ->maxLength('hash', 255);
-
         return $validator;
     }
 
