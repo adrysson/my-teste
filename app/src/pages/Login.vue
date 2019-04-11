@@ -45,10 +45,11 @@ export default {
       this.$q.loading.show()
       this.$axios.post(`/v1/users/login`, this.form)
         .then(response => {
+          localStorage.setItem('myteste@token', response.data.token)
           this.$q.notify({
             color: 'positive',
             position: 'top',
-            message: response.data,
+            message: 'Você foi logado com sucesso.',
             icon: 'check'
           })
           this.$router.push('/perfil')
