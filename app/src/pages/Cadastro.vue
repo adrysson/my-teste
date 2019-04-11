@@ -11,18 +11,18 @@
                 </q-card-title>
                 <q-card-separator />
                 <q-card-main>
-                    <div class="row justify-center">
-                        <q-input v-model="form.name" class="q-mr-md q-ml-md" float-label="Nome completo"/>
-                    </div>
-                    <div class="row justify-center">
-                        <q-input v-model="form.email" class="q-mr-md q-ml-md" float-label="E-mail"/>
-                    </div>
-                    <div class="row justify-center">
-                        <q-input v-model="form.username" class="q-mr-md q-ml-md" float-label="Nome de usuário"/>
-                    </div>
-                    <div class="row justify-center">
-                        <q-input v-model="form.password" type="password" class="q-mr-md q-ml-md" float-label="Senha"/>
-                    </div>
+                    <q-field :error-label="error.name" class="row justify-center">
+                        <q-input v-model="form.name" class="q-mr-md q-ml-md" @blur="$v.form.name.$touch" :error="$v.form.name.$error" float-label="Nome completo"/>
+                    </q-field>
+                    <q-field :error-label="error.email" class="row justify-center">
+                        <q-input v-model="form.email" class="q-mr-md q-ml-md" @blur="$v.form.email.$touch" :error="$v.form.email.$error" float-label="E-mail"/>
+                    </q-field>
+                    <q-field :error-label="error.username" class="row justify-center">
+                        <q-input v-model="form.username" class="q-mr-md q-ml-md" @blur="$v.form.username.$touch" :error="$v.form.username.$error" float-label="Nome de usuário"/>
+                    </q-field>
+                    <q-field :error-label="error.password" class="row justify-center">
+                        <q-input v-model="form.password" type="password" class="q-mr-md q-ml-md" @blur="$v.form.password.$touch" :error="errors.form.username.error || $v.form.password.$error" float-label="Senha"/>
+                    </q-field>
                 </q-card-main>
                 <q-card-separator />
                 <q-card-actions>
@@ -38,6 +38,7 @@
 </template>
 
 <script>
+import { required, email } from 'vuelidate/lib/validators'
 export default {
   name: 'Cadastro',
   data () {
@@ -48,38 +49,101 @@ export default {
         email: '',
         username: '',
         password: ''
+      },
+      error: {
+        name: '',
+        email: '',
+        username: '',
+        password: ''
+      },
+      errors: {
+        form: {
+          name: {
+            error: false
+          },
+          email: {
+            error: false
+          },
+          username: {
+            error: false
+          },
+          password: {
+            error: false
+          }
+        }
+      },
+      errorMessages: {
+        required: 'Este campo é obrigatório',
+        email: 'Informe um e-mail válido'
       }
+    }
+  },
+  validations: {
+    form: {
+      name: { required },
+      email: { required, email },
+      username: { required },
+      password: { required }
     }
   },
   methods: {
     submit () {
-      this.loading = true
-      this.$axios.post(`/v1/users`, this.form)
-        .then(response => {
-          this.$q.notify({
-            color: 'positive',
-            position: 'top',
-            message: response.data,
-            icon: 'check'
-          })
-          this.$router.push('/entrar')
+      this.$v.form.$touch()
+      if (this.$v.form.$error) {
+        this.checkErrors(this.$v.form)
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Preencha os campos corretamente',
+          icon: 'report_problem'
         })
-        .catch((xhr) => {
-          let errors = Object.keys(xhr.response.data).map(field => {
-            return Object.keys(xhr.response.data[field]).map(error => {
-              return `${field}: ${xhr.response.data[field][error]}`
+      } else {
+        this.loading = true
+        this.$axios.post(`/v1/users`, this.form)
+          .then(response => {
+            this.$q.notify({
+              color: 'positive',
+              position: 'top',
+              message: response.data,
+              icon: 'check'
             })
-          }).join(', ')
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: errors,
-            icon: 'report_problem'
+            this.$router.push('/entrar')
           })
-        })
-        .then(() => {
-          this.loading = false
-        })
+          .catch((xhr) => {
+            let errors = Object.keys(xhr.response.data).map(field => {
+              return Object.keys(xhr.response.data[field]).map(error => {
+                this.errorMessages[error] = xhr.response.data[field][error]
+                this.setError(field, error)
+                return `${field}: ${xhr.response.data[field][error]}`
+              })
+            }).join(', ')
+            this.$q.notify({
+              color: 'negative',
+              position: 'top',
+              message: errors,
+              icon: 'report_problem'
+            })
+          })
+          .then(() => {
+            this.loading = false
+          })
+      }
+    },
+    checkErrors (fields) {
+      Object.keys(this.form).forEach(field => {
+        if (fields[field].$error) {
+          Object.keys(fields[field].$params).forEach(param => [
+            this.setError(field, param)
+          ])
+        }
+      })
+    },
+    setError (field, param) {
+      this.error[field] = this.getErrorMessage(param)
+      this.errors.form[field].error = true
+    },
+    getErrorMessage (param) {
+      return this.errorMessages[param]
     }
   }
 }
