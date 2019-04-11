@@ -6,16 +6,10 @@
         <div class="row justify-center">
             <q-card>
                 <q-card-title align="center">
-                    Formulário de cadastro
+                    Formulário de login
                 </q-card-title>
                 <q-card-separator />
                 <q-card-main>
-                    <div class="row justify-center">
-                        <q-input v-model="form.name" class="q-mr-md q-ml-md" float-label="Nome completo"/>
-                    </div>
-                    <div class="row justify-center">
-                        <q-input v-model="form.email" class="q-mr-md q-ml-md" float-label="E-mail"/>
-                    </div>
                     <div class="row justify-center">
                         <q-input v-model="form.username" class="q-mr-md q-ml-md" float-label="Nome de usuário"/>
                     </div>
@@ -25,10 +19,10 @@
                 </q-card-main>
                 <q-card-separator />
                 <q-card-actions>
-                    <q-btn label="Realizar cadastro" @click="submit" color="green" />
-                        <router-link to="/">
-                            <q-btn label="Voltar" color="grey" />
-                        </router-link>
+                    <q-btn label="Entrar" @click="submit" color="green" />
+                    <router-link to="/">
+                        <q-btn label="Voltar" color="grey" />
+                    </router-link>
                 </q-card-actions>
             </q-card>
         </div>
@@ -37,12 +31,10 @@
 
 <script>
 export default {
-  name: 'Cadastro',
+  name: 'Login',
   data () {
     return {
       form: {
-        name: '',
-        email: '',
         username: '',
         password: ''
       }
@@ -51,7 +43,7 @@ export default {
   methods: {
     submit () {
       this.$q.loading.show()
-      this.$axios.post(`/v1/users`, this.form)
+      this.$axios.post(`/v1/users/login`, this.form)
         .then(response => {
           this.$q.notify({
             color: 'positive',
@@ -59,7 +51,7 @@ export default {
             message: response.data,
             icon: 'check'
           })
-          this.$router.push('/entrar')
+          this.$router.push('/perfil')
         })
         .catch((xhr) => {
           let errors = Object.keys(xhr.response.data).map(field => {
