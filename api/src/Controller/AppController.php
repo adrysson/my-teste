@@ -63,6 +63,7 @@ class AppController extends Controller
             ],
             'unauthorizedRedirect' => false,
             'checkAuthIn' => 'Controller.initialize',
+            'authorize' => 'Controller',
         ]);
         /*
          * Enable the following component for recommended CakePHP security settings.

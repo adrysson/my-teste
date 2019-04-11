@@ -22,6 +22,11 @@ class UsersController extends AppController
         parent::initialize();
         $this->Auth->allow(['add', 'activate']);
     }
+
+    public function isAuthorized($user)
+    {
+        return $user['active'];
+    }
     /**
      * View method
      *

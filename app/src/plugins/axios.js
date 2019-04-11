@@ -7,7 +7,7 @@ export default ({ Vue }) => {
       'Accept': 'application/json'
     }
   })
-  axios.interceptors.request.use(config => {
+  Vue.prototype.$axios.interceptors.request.use(config => {
     const token = localStorage.getItem('myteste@token')
     if (token) {
       config.headers.Authorization = `Bearer ${token}`

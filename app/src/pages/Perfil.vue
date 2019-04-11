@@ -25,8 +25,34 @@ export default {
         name: '',
         email: '',
         username: '',
-        password: ''
+        password: '',
+        active: false
       }
+    }
+  },
+  mounted () {
+    const userId = this.$store.getters['user/getUserId']
+    this.getUser(userId)
+  },
+  methods: {
+    getUser (id) {
+      this.$q.loading.show()
+      this.$axios.get(`/v1/users/${id}`)
+        .then(response => {
+          console.log(response)
+        })
+        .catch((xhr) => {
+          this.$q.notify({
+            color: 'negative',
+            position: 'top',
+            message: xhr.response.data.message,
+            icon: 'report_problem'
+          })
+          this.$router.push('/entrar')
+        })
+        .then(() => {
+          this.$q.loading.hide()
+        })
     }
   }
 }

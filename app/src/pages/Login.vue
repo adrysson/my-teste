@@ -46,24 +46,14 @@ export default {
       this.$axios.post(`/v1/users/login`, this.form)
         .then(response => {
           localStorage.setItem('myteste@token', response.data.token)
-          this.$q.notify({
-            color: 'positive',
-            position: 'top',
-            message: 'Você foi logado com sucesso.',
-            icon: 'check'
-          })
+          this.$store.commit('user/setUserId', response.data.user.id)
           this.$router.push('/perfil')
         })
         .catch((xhr) => {
-          let errors = Object.keys(xhr.response.data).map(field => {
-            return Object.keys(xhr.response.data[field]).map(error => {
-              return `${field}: ${xhr.response.data[field][error]}`
-            })
-          }).join(', ')
           this.$q.notify({
             color: 'negative',
             position: 'top',
-            message: errors,
+            message: xhr.response.data,
             icon: 'report_problem'
           })
         })
