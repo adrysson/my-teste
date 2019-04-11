@@ -197,17 +197,17 @@ return [
      */
     'EmailTransport' => [
         'default' => [
-            'className' => 'Cake\Mailer\Transport\MailTransport',
+            'className' => 'Cake\Mailer\Transport\SmtpTransport',
             /*
              * The following keys are used in SMTP transports:
              */
-            'host' => 'localhost',
-            'port' => 25,
+            'host' => 'smtp.gmail.com',
+            'port' => 587,
             'timeout' => 30,
             'username' => null,
             'password' => null,
             'client' => null,
-            'tls' => null,
+            'tls' => true,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
         'sendgrid' => [

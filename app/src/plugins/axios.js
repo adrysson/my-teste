@@ -8,8 +8,9 @@ export default ({ Vue }) => {
     }
   })
   Vue.prototype.$axios.interceptors.request.use(config => {
+    let action = config.url.split('/').pop()
     const token = localStorage.getItem('myteste@token')
-    if (token) {
+    if (token && action !== 'login') {
       config.headers.Authorization = `Bearer ${token}`
     }
     return config

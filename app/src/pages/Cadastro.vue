@@ -4,6 +4,7 @@
             <h2>My Test</h2>
         </div>
         <div class="row justify-center">
+          <form @submit.prevent="submit">
             <q-card>
                 <q-card-title align="center">
                     Formulário de cadastro
@@ -25,12 +26,13 @@
                 </q-card-main>
                 <q-card-separator />
                 <q-card-actions>
-                    <q-btn label="Realizar cadastro" @click="submit" color="green" />
-                        <router-link to="/">
-                            <q-btn label="Voltar" color="grey" />
-                        </router-link>
+                    <q-btn label="Realizar cadastro" :loading="loading" type="submit" color="green" />
+                    <router-link to="/">
+                        <q-btn label="Voltar" color="grey" />
+                    </router-link>
                 </q-card-actions>
             </q-card>
+          </form>
         </div>
     </q-page>
 </template>
@@ -40,6 +42,7 @@ export default {
   name: 'Cadastro',
   data () {
     return {
+      loading: false,
       form: {
         name: '',
         email: '',
@@ -50,7 +53,7 @@ export default {
   },
   methods: {
     submit () {
-      this.$q.loading.show()
+      this.loading = true
       this.$axios.post(`/v1/users`, this.form)
         .then(response => {
           this.$q.notify({
@@ -75,7 +78,7 @@ export default {
           })
         })
         .then(() => {
-          this.$q.loading.hide()
+          this.loading = false
         })
     }
   }
