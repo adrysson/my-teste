@@ -20,6 +20,9 @@ module.exports = function (ctx) {
     supportIE: true,
     build: {
       scopeHoisting: true,
+      env: {
+        API: JSON.stringify(process.env.SERVER_BASE ? `http://${process.env.SERVER_BASE}` : 'http://localhost/my-teste/api')
+      },
       // vueRouterMode: 'history',
       // vueCompiler: true,
       // gzip: true,
@@ -61,14 +64,16 @@ module.exports = function (ctx) {
         'QCardMain',
         'QCardMedia',
         'QCardSeparator',
-        'QCardActions',        
+        'QCardActions',
+        'QInput',
       ],
       directives: [
         'Ripple'
       ],
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Loading',
       ]
       // iconSet: ctx.theme.mat ? 'material-icons' : 'ionicons'
       // i18n: 'de' // Quasar language
