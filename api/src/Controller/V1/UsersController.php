@@ -22,6 +22,11 @@ class UsersController extends AppController
         parent::initialize();
         $this->Auth->allow(['add', 'activate']);
     }
+
+    public function isAuthorized($user)
+    {
+        return $user['active'];
+    }
     /**
      * View method
      *
@@ -51,18 +56,18 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
 
-            $hash = Md5PasswordHasher::hash(microtime());
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if ($user_saved = $this->Users->save($user)) {
 
-            $user = $this->Users->patchEntity($user, $this->request->withData('hash', $hash)->getData());
-            if ($this->Users->save($user)) {
+                $hash = Md5PasswordHasher::hash($user_saved->id);
 
-                $email = new Email('sendgrid');
-                $email->from(['adryssonlc@gmail.com' => 'My Test'])
+                $email = new Email('default');
+                $response = $email->from(['adryssonlc@gmail.com' => 'My Test'])
                     ->to($this->request->getData('email'))
                     ->subject('Confirmação de e-mail')
-                    ->send('Seu cadastro foi realizado com sucesso. Para ativar sua conta, acesse o link: ' . Router::url(['action' => 'activate', $hash], true));
+                    ->send('Seu cadastro foi realizado com sucesso. Para ativar sua conta, acesse o link: ' . env('APP_URL', 'https://google.com.br') . '/#/ativacao/' . $hash);
 
-                return $this->response->withStatus(200)->withStringBody(__('The user has been saved.'));
+                    return $this->response->withStatus(200)->withStringBody(__('The user has been saved. Make an activation of your account through the link that was sent to your email.'));
             } else {
                 $this->response = $this->response->withStatus(422);
                 $this->set([
@@ -87,7 +92,8 @@ class UsersController extends AppController
 
                 $this->set([
                     'token' => $token,
-                    '_serialize' => ['token'],
+                    'user' => $user,
+                    '_serialize' => ['token', 'user'],
                 ]);
             } else {
                 return $this->response->withStatus(422)->withStringBody(__('Username or password is incorrect'));
@@ -95,21 +101,41 @@ class UsersController extends AppController
         }
     }
     
-    public function activate($hash)
+    public function activate()
     {
-        $user = $this->Users->find('all', [
-            'conditions' => [
-                'hash' => $hash,
-                'active' => false,
-            ],
-        ])->first();
+        if ($this->request->is('post')) {
+            $user = $this->Users->find('all', [
+                'conditions' => [
+                    'MD5(CONCAT("' . Security::getSalt() . '",Users.id))' => $this->request->getData('hash'),
+                    'active' => false,
+                ],
+            ])->first();
 
-        if ($user) {
-            $user->active = true;
-            if ($this->Users->save($user)) {
-                $this->redirect(env('APP_URL', 'https://google.com.br'));
+            if ($user) {
+
+                $user->active = true;
+
+                if ($user_saved = $this->Users->save($user)) {
+                    $token = JWT::encode([
+                        'sub' => $user['id'],
+                        'exp' => time() + 3600 * 24 * 7,
+                    ], Security::getSalt());
+
+                    $this->set([
+                        'token' => $token,
+                        'user' => $user_saved,
+                        '_serialize' => ['token', 'user'],
+                    ]);
+                } else {
+                    $this->response = $this->response->withStatus(422);
+                    $this->set([
+                        'errors' => $user->errors(),
+                        '_serialize' => 'errors'
+                    ]);
+                }
+            } else {
+                return $this->response->withStatus(400)->withStringBody(__('This link is not available'));
             }
         }
-        return $this->response->withStatus(400)->withStringBody(__('This link is not available'));
     }
 }
