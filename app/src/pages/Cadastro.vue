@@ -12,16 +12,16 @@
                 <q-card-separator />
                 <q-card-main>
                     <q-field :error-label="error.name" class="row justify-center">
-                        <q-input v-model="form.name" class="q-mr-md q-ml-md" @blur="$v.form.name.$touch" :error="$v.form.name.$error" float-label="Nome completo"/>
+                        <q-input v-model="form.name" class="q-mr-md q-ml-md" @blur="$v.form.name.$touch" :error="errors.form.name.error || $v.form.name.$error" float-label="Nome completo"/>
                     </q-field>
                     <q-field :error-label="error.email" class="row justify-center">
-                        <q-input v-model="form.email" class="q-mr-md q-ml-md" @blur="$v.form.email.$touch" :error="$v.form.email.$error" float-label="E-mail"/>
+                        <q-input v-model="form.email" class="q-mr-md q-ml-md" type="email" @blur="$v.form.email.$touch" :error="errors.form.email.error || $v.form.email.$error" float-label="E-mail"/>
                     </q-field>
                     <q-field :error-label="error.username" class="row justify-center">
-                        <q-input v-model="form.username" class="q-mr-md q-ml-md" @blur="$v.form.username.$touch" :error="$v.form.username.$error" float-label="Nome de usuário"/>
+                        <q-input v-model="form.username" class="q-mr-md q-ml-md" @blur="$v.form.username.$touch" :error="errors.form.username.error || $v.form.username.$error" float-label="Nome de usuário"/>
                     </q-field>
                     <q-field :error-label="error.password" class="row justify-center">
-                        <q-input v-model="form.password" type="password" class="q-mr-md q-ml-md" @blur="$v.form.password.$touch" :error="errors.form.username.error || $v.form.password.$error" float-label="Senha"/>
+                        <q-input v-model="form.password" type="password" class="q-mr-md q-ml-md" @blur="$v.form.password.$touch" :error="errors.form.password.error || $v.form.password.$error" float-label="Senha"/>
                     </q-field>
                 </q-card-main>
                 <q-card-separator />
