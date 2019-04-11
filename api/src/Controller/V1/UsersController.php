@@ -87,7 +87,8 @@ class UsersController extends AppController
 
                 $this->set([
                     'token' => $token,
-                    '_serialize' => ['token'],
+                    'user' => $user,
+                    '_serialize' => ['token', 'user'],
                 ]);
             } else {
                 return $this->response->withStatus(422)->withStringBody(__('Username or password is incorrect'));
