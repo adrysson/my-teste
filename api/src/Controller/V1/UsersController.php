@@ -68,7 +68,7 @@ class UsersController extends AppController
                 //     ->send('Seu cadastro foi realizado com sucesso. Para ativar sua conta, acesse o link: ' . env('APP_URL', 'https://google.com.br') . '/#/ativacao/' . $hash);
                 $this->set([
                     'url' => env('APP_URL', 'https://google.com.br') . '/#/ativacao/' . $hash,
-                    'message' => __('The user has been saved. Make an activation of your account through the link'),
+                    'message' => __('O usuário foi salvo com sucesso. Faça a ativação de sua conta através do link'),
                     '_serialize' => ['url', 'message']
                 ]);
             } else {
