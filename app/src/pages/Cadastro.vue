@@ -88,6 +88,7 @@ export default {
   },
   methods: {
     submit () {
+      this.removeErrors()
       this.$v.form.$touch()
       if (this.$v.form.$error) {
         this.checkErrors(this.$v.form)
@@ -110,18 +111,11 @@ export default {
             this.$router.push('/entrar')
           })
           .catch((xhr) => {
-            let errors = Object.keys(xhr.response.data).map(field => {
-              return Object.keys(xhr.response.data[field]).map(error => {
+            Object.keys(xhr.response.data).forEach(field => {
+              Object.keys(xhr.response.data[field]).forEach(error => {
                 this.errorMessages[error] = xhr.response.data[field][error]
                 this.setError(field, error)
-                return `${field}: ${xhr.response.data[field][error]}`
               })
-            }).join(', ')
-            this.$q.notify({
-              color: 'negative',
-              position: 'top',
-              message: errors,
-              icon: 'report_problem'
             })
           })
           .then(() => {
@@ -140,10 +134,17 @@ export default {
     },
     setError (field, param) {
       this.error[field] = this.getErrorMessage(param)
+      console.log(this.errors.form)
       this.errors.form[field].error = true
     },
     getErrorMessage (param) {
       return this.errorMessages[param]
+    },
+    removeErrors () {
+      Object.keys(this.form).forEach(field => {
+        this.$v.form[field].error = this.errors.form[field].error = false
+        this.error[field] = ''
+      })
     }
   }
 }
