@@ -22,7 +22,7 @@ module.exports = function (ctx) {
     build: {
       scopeHoisting: true,
       env: {
-        API: JSON.stringify(process.env.SERVER_BASE ? `http://${process.env.SERVER_BASE}` : 'http://localhost/my-teste/api')
+        API: JSON.stringify(process.env.SERVER_BASE ? `${process.env.SERVER_BASE}` : 'http://localhost/my-teste/api')
       },
       // vueRouterMode: 'history',
       // vueCompiler: true,
