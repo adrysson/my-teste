@@ -28,6 +28,15 @@
             </q-card>
           </form>
         </div>
+        <br>
+        <div v-if="url">
+          <div class="row justify-center">
+            <p class="red-text">Link de ativação do usuário:</p>
+          </div>
+          <div class="row justify-center">
+            <a :href="url">{{url}}</a>
+          </div>
+        </div>
     </q-page>
 </template>
 
@@ -36,6 +45,7 @@ export default {
   name: 'Login',
   data () {
     return {
+      url: localStorage.getItem('mytest@url') || '',
       loading: false,
       form: {
         username: '',

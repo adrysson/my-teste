@@ -28,6 +28,7 @@ export default {
           icon: 'check'
         })
         this.msg = 'Você será redirecionado para o seu perfil em breve.'
+        localStorage.removeItem('mytest@url')
         localStorage.setItem('myteste@token', response.data.token)
         this.$store.commit('user/setUserId', response.data.user.id)
         this.$router.push('/perfil')

@@ -61,13 +61,16 @@ class UsersController extends AppController
 
                 $hash = Md5PasswordHasher::hash($user_saved->id);
 
-                $email = new Email('default');
-                $response = $email->from(['adryssonlc@gmail.com' => 'My Test'])
-                    ->to($this->request->getData('email'))
-                    ->subject('Confirmação de e-mail')
-                    ->send('Seu cadastro foi realizado com sucesso. Para ativar sua conta, acesse o link: ' . env('APP_URL', 'https://google.com.br') . '/#/ativacao/' . $hash);
-
-                    return $this->response->withStatus(200)->withStringBody(__('The user has been saved. Make an activation of your account through the link that was sent to your email.'));
+                // $email = new Email('default');
+                // $response = $email->from(['adryssonlc@gmail.com' => 'My Test'])
+                //     ->to($this->request->getData('email'))
+                //     ->subject('Confirmação de e-mail')
+                //     ->send('Seu cadastro foi realizado com sucesso. Para ativar sua conta, acesse o link: ' . env('APP_URL', 'https://google.com.br') . '/#/ativacao/' . $hash);
+                $this->set([
+                    'url' => env('APP_URL', 'https://google.com.br') . '/#/ativacao/' . $hash,
+                    'message' => __('The user has been saved. Make an activation of your account through the link'),
+                    '_serialize' => ['url', 'message']
+                ]);
             } else {
                 $this->response = $this->response->withStatus(422);
                 $this->set([

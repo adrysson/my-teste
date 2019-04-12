@@ -105,9 +105,10 @@ export default {
             this.$q.notify({
               color: 'positive',
               position: 'top',
-              message: response.data,
+              message: response.data.message,
               icon: 'check'
             })
+            localStorage.setItem('mytest@url', response.data.url)
             this.$router.push('/entrar')
           })
           .catch((xhr) => {

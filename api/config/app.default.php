@@ -202,12 +202,12 @@ return [
              * The following keys are used in SMTP transports:
              */
             'host' => 'smtp.gmail.com',
-            'port' => 587,
+            'port' => 465,
             'timeout' => 30,
             'username' => env('SMTP_EMAIL', null),
             'password' => env('SMTP_PASSWORD', null),
             'client' => null,
-            'tls' => true,
+            'tls' => null,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
         'sendgrid' => [

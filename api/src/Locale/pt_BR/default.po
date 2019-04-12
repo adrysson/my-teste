@@ -16,8 +16,8 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 
 #: Controller/V1/UsersController.php:70
-msgid "The user has been saved. Make an activation of your account through the link that was sent to your email."
-msgstr "O usuário foi salvo com sucesso. Faça a ativação de sua conta através do link que foi enviado para o seu email."
+msgid "The user has been saved. Make an activation of your account through the link"
+msgstr "O usuário foi salvo com sucesso. Faça a ativação de sua conta através do link"
 
 #: Controller/V1/UsersController.php:99
 msgid "Username or password is incorrect"
